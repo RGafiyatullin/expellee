@@ -1,0 +1,22 @@
+<iq type='set' xmlns='jabber:iq:roster' id='rosterpush1234567890'>
+	<query xmlns='jabber:iq:roster'>
+		<item jid='alice@nowhere.particular.in' subscription='to'>
+			<note xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v1' id='123'>That is Alice</note>
+			<note xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v1' id='234'>I don&apos;t know her personally. Bob does</note>
+			<notes xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v2'>
+				<note id='123'>This is Alice</note>
+				<note id='234'>I don&apos;t know her personally. Bob does</note>
+			</notes>
+		</item>
+		<item jid='bob@nowhere.particular.in' subscription='both'>
+			<note xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v1' id='345'>Bob. Well, Bob</note>
+			<note xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v1' id='456'>We know each other for quite a long period of time</note>
+			<notes xmlns='https://github.com/rgafiyatullin/expellee.git#roster-item-ext-v2'>
+				<note id='345'>Bob. Well, Bob</note>
+				<note id='456'>We know each other for quite a long period of time</note>
+			</notes>
+
+		</item>
+		<item jid='eve@nowhere.particular.in' subscription='from' />
+	</query>
+</iq>
