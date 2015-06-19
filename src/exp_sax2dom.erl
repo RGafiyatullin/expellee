@@ -3,6 +3,7 @@
 		new/1, new/0,
 		sax_event_in/2
 	]).
+-export_type ([ctx/0]).
 -include("xml.hrl").
 -include("sax.hrl").
 
@@ -140,9 +141,14 @@ sax_event_in(
 	{ok, FinalizedCD, ImmediateParentFrame0} = finalize_frame( CDFrame ),
 	{ok, ImmediateParentFrame1} = xe_frame_ch_enqueue( FinalizedCD, ImmediateParentFrame0 ),
 	{ok, FinalizedImmediateParent, FrameToBeCurrent0} = finalize_frame( ImmediateParentFrame1 ),
-	{ok, FrameToBeCurrent1} = xe_frame_ch_enqueue( FinalizedImmediateParent, FrameToBeCurrent0 ),
-	Ctx1 = Ctx0 #ctx{ current_frame = FrameToBeCurrent1 },
-	?ret_incomplete( Ctx1 );
+	case FrameToBeCurrent0 of
+		undefined ->
+			?ret_complete( FinalizedImmediateParent );
+		_ ->
+			{ok, FrameToBeCurrent1} = xe_frame_ch_enqueue( FinalizedImmediateParent, FrameToBeCurrent0 ),
+			Ctx1 = Ctx0 #ctx{ current_frame = FrameToBeCurrent1 },
+			?ret_incomplete( Ctx1 )
+	end;
 
 sax_event_in(
 	#xml_cdata{},
