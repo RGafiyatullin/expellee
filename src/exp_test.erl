@@ -55,7 +55,7 @@ t3_test() ->
 	?assert( exp_node_attrs:attr( K1, Node ) == V1 ),
 	?assert( exp_node_attrs:attr( K2, Node ) == V2 ),
 	?assert( exp_node_attrs:attr( K3, Node ) == V3 ),
-	?assert( exp_node:chs( Node ) == [ Ch1, Ch2, Ch3 ] ),
+	?assert( exp_node_children:get( Node ) == [ Ch1, Ch2, Ch3 ] ),
 	Node.
 
 t4_render_test() ->

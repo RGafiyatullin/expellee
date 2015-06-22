@@ -4,9 +4,7 @@
 		new/1, new/2, new/3,
 
 		ns/1, ncn/1,
-		fqn/1,
-
-		chs/1
+		fqn/1
 	]).
 
 -include("xml.hrl").
@@ -24,8 +22,5 @@ new( {NS, NCN}, Attrs, Chs ) ->
 ns( #xe{ ns = NS } ) -> NS.
 ncn( #xe{ ncn = NCN } ) -> NCN.
 fqn( #xe{ ns = NS, ncn = NCN } ) -> {NS, NCN}.
-
--spec chs( #xe{} ) -> [ xml_element() ].
-chs( #xe{ c = Chs } ) -> Chs.
 
 
