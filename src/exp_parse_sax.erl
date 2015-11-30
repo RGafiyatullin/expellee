@@ -35,7 +35,7 @@ free( #sax{ exml = Exml } ) ->
 		_ -> {error, already_freed}
 	end.
 
--spec parse( binary(), sax() ) -> { ok, [ sax_event() ], sax() } | {error, term()}.
+-spec parse( binary(), sax() ) -> { ok, [ sax_event() ], sax() } | {error, term(), sax()}.
 parse( Bin, S0 = #sax{ exml = Exml } ) when is_binary( Bin ) ->
 	case exml_event:parse( Exml, Bin ) of
 		{error, XmlError} ->
