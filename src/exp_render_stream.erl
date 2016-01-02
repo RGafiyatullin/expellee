@@ -140,7 +140,7 @@ node_open_tag_render_attrs_folder( { Name, Value }, {Acc0, Ctx} ) ->
 
 
 get_prefix_for_ns( NS, Ctx0 ) ->
-	case get_prefix_for_ns_loop( NS, Ctx0 ) of
+	case get_prefix_for_ns_loop( NS, Ctx0, sets:new() ) of
 		undefined ->
 			FilteredImports =
 				lists:filter(
@@ -154,15 +154,27 @@ get_prefix_for_ns( NS, Ctx0 ) ->
 			{Prefix, Ctx0}
 	end.
 
-get_prefix_for_ns_loop( _, undefined ) -> undefined;
-get_prefix_for_ns_loop( NS, #ctx{ imports = Imports, parent_ctx = ParentCtx } ) ->
+get_prefix_for_ns_loop( _, undefined, _ ) -> undefined;
+get_prefix_for_ns_loop( NS, Ctx = #ctx{ imports = Imports }, AvoidedPrefixes ) ->
 	case lists:keyfind( NS, 1, Imports ) of
 		{NS, Prefix} ->
-			Prefix;
+			case sets:is_element(Prefix, AvoidedPrefixes) of
+				false -> Prefix;
+				true ->
+					get_prefix_for_ns_loop_proceed_with_parent( NS, Ctx, AvoidedPrefixes )
+			end;
 
 		false ->
-			get_prefix_for_ns_loop( NS, ParentCtx )
+			get_prefix_for_ns_loop_proceed_with_parent( NS, Ctx, AvoidedPrefixes )
 	end.
+
+get_prefix_for_ns_loop_proceed_with_parent( NS, #ctx{ imports = Imports, parent_ctx = ParentCtx }, AvoidedPrefixes0 ) ->
+	AvoidedPrefixes1 = lists:foldl(
+		fun sets:add_element/2,
+		AvoidedPrefixes0,
+		[Prefix || {_, Prefix} <- Imports]),
+	get_prefix_for_ns_loop(NS, ParentCtx, AvoidedPrefixes1).
+
 
 
 resolve_maybe_inherited_ns( ?xml_ns_inherit, #ctx{ current_ns = ?xml_ns_inherit, parent_ctx = Ctx } ) -> resolve_maybe_inherited_ns( ?xml_ns_inherit, Ctx );
